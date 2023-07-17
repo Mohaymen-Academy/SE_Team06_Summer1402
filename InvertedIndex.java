@@ -11,7 +11,8 @@ public class InvertedIndex {
     public void addDocument(String documentName, String[] words) {
         for (String word : words)
             if (wordTable.get(word) != null) {
-                wordTable.get(word).add(documentName);
+                if (!wordTable.get(word).contains(documentName))
+                    wordTable.get(word).add(documentName);
             } else {
                 ArrayList<String> newWordList = new ArrayList<String>();
                 newWordList.add(documentName);

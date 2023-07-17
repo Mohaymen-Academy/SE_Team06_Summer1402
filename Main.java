@@ -13,8 +13,6 @@ public class Main {
             String[] words = su.split(new String[] { ":", "-" });
             su.setString(filename);
             su.removeAfter('.');
-            System.out.println("filename:" + su.getString());
-            System.out.println(words[0] + "$" + words[1] + "$" + words[2]);
             ii.addDocument(su.getString(), words);
         }
 
