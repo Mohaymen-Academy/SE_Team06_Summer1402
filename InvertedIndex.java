@@ -21,7 +21,10 @@ public class InvertedIndex {
     }
 
     public ArrayList<String> searchDocuments(String searchKey) {
-        return wordTable.get(searchKey);
+        if (wordTable.get(searchKey) != null)
+            return wordTable.get(searchKey);
+        else 
+            return new ArrayList<String>();
     }
 
     public void show() {
