@@ -31,7 +31,7 @@ public class FileReader {
             File file = new File(filePath);
             Scanner sc = new Scanner(file);
             while (sc.hasNextLine())
-                fullText += sc.nextLine();
+                fullText += sc.nextLine() + "\n";
             sc.close();
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
