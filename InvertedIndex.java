@@ -1,36 +1,36 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InvertedIndex {
-    private HashMap<String, ArrayList<String>> wordTable;
+public class InvertedIndex<T, V> {
+    private HashMap<T, ArrayList<V>> wordMap;
 
     public InvertedIndex() {
-        wordTable = new HashMap<String, ArrayList<String>>();
+        wordMap = new HashMap<T, ArrayList<V>>();
     }
 
-    public void addDocument(String documentName, String[] words) {
-        for (String word : words)
-            if (wordTable.get(word) != null) {
-                if (!wordTable.get(word).contains(documentName))
-                    wordTable.get(word).add(documentName);
+    public void addDocument(V documentRef, T[] words) {
+        for (T word : words)
+            if (wordMap.get(word) != null) {
+                if (!wordMap.get(word).contains(documentRef))
+                    wordMap.get(word).add(documentRef);
             } else {
-                ArrayList<String> newWordList = new ArrayList<String>();
-                newWordList.add(documentName);
-                wordTable.put(word, newWordList);
+                ArrayList<V> newWordList = new ArrayList<V>();
+                newWordList.add(documentRef);
+                wordMap.put(word, newWordList);
             }
     }
 
-    public ArrayList<String> searchDocuments(String searchKey) {
-        if (wordTable.get(searchKey) != null)
-            return wordTable.get(searchKey);
+    public ArrayList<V> searchDocuments(T searchKey) {
+        if (wordMap.get(searchKey) != null)
+            return wordMap.get(searchKey);
         else 
-            return new ArrayList<String>();
+            return new ArrayList<V>();
     }
 
     public void show() {
-        for (String word : wordTable.keySet()) {
+        for (T word : wordMap.keySet()) {
             System.out.println("===" + word + "===");
-            for (String bookName : wordTable.get(word))
+            for (V bookName : wordMap.get(word))
                 System.out.println(bookName);
         }
 
