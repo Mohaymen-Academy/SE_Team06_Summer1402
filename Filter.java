@@ -29,6 +29,7 @@ class AndFilter implements Filter {
 
 class OrFilter implements Filter {
     private ArrayList<String> _data;
+    private boolean hasData = false;
 
     public OrFilter() {
         _data = new ArrayList<String>();
@@ -37,12 +38,13 @@ class OrFilter implements Filter {
     public ArrayList<String> filter(ArrayList<String> data) {
         ArrayList<String> result = new ArrayList<String>();
         for (String s : data)
-            if (_data.contains(s))
+            if (!hasData || _data.contains(s))
                 result.add(s);
         return result;
     }
 
     public void addData(ArrayList<String> data) {
+        hasData = true;
         for (String newData : data)
             if (!_data.contains(newData))
                 _data.add(newData);
