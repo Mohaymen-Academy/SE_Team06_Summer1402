@@ -31,4 +31,7 @@ replay_pid*
 documents
 *.txt
 
+# test files
+test.java
+
 # End of https://www.toptal.com/developers/gitignore/api/java
