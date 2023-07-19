@@ -26,3 +26,47 @@ class AndFilter implements Filter {
     }
 
 }
+
+class OrFilter implements Filter {
+    private ArrayList<String> _data;
+
+    public OrFilter() {
+        _data = new ArrayList<String>();
+    }
+
+    public ArrayList<String> filter(ArrayList<String> data) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String s : data)
+            if (_data.contains(s))
+                result.add(s);
+        return result;
+    }
+
+    public void addData(ArrayList<String> data) {
+        for (String newData : data)
+            if (!_data.contains(newData))
+                _data.add(newData);
+    }
+}
+
+class NotFilter implements Filter {
+    private ArrayList<String> _data;
+
+    public NotFilter() {
+        _data = new ArrayList<String>();
+    }
+
+    public ArrayList<String> filter(ArrayList<String> data) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String s : data)
+            if (!_data.contains(s))
+                result.add(s);
+        return result;
+    }
+
+    public void addData(ArrayList<String> data) {
+        for (String newData : data)
+            if (!_data.contains(newData))
+                _data.add(newData);
+    }
+}
