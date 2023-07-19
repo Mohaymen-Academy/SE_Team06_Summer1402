@@ -10,6 +10,10 @@ public class FileReader {
         sourcePath = _sourcePath;
     }
 
+    private String getPath(String filename) {
+        return (sourcePath + "/" + filename);
+    }
+
     public ArrayList<String> getFilenames() {
         ArrayList<String> filenames = new ArrayList<String>();
         File file = new File(sourcePath);
@@ -18,10 +22,6 @@ public class FileReader {
             if (currentFile.isFile())
                 filenames.add(currentFile.getName());
         return filenames;
-    }
-
-    private String getPath(String filename) {
-        return (sourcePath + "/" + filename);
     }
 
     public String getFullText(String filename) {

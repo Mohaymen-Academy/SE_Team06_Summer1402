@@ -4,25 +4,20 @@ public class Main {
     public static final String WHITESPACE_REGEX = "\\s+";
 
     public static void main(String[] args) {
-        ConsoleInterface ci = new ConsoleInterface();
-        FileReader fileReader = new FileReader("documents");
+        UserInterface console = new Console();
+        console.println("Waiting for the preprocessing...");
+        InvertedIndex ii = new InvertedIndex(new RegexTokenizer(WHITESPACE_REGEX), new TestNormalizer());
+
+        FileReader fileReader = new FileReader("./documents");
         ArrayList<String> filenames = fileReader.getFilenames();
-        InvertedIndex<String, String> ii = new InvertedIndex<String, String>();
-
-        ci.print("wait for preprocessing...");
-
-        for (String filename : filenames) {
-            String fullText = fileReader.getFullText(filename);
-            fullText = StringUtils.normalize(fullText);
-            String[] words = StringUtils.split(fullText, new String[] { WHITESPACE_REGEX, ":", "-" });
-            String documentName = StringUtils.removeAfter(filename, '.');
-            ii.addDocument(documentName, words);
-        }
+        for (String filename : filenames)
+            ii.addDocument(fileReader.getFullText(filename), StringUtils.removeAfter(filename, '.'));
 
         while (true) {
-            String word = ci.getWord().toLowerCase();
-            ArrayList<String> results = ii.searchDocuments(word);
-            ci.showResultBooks(results);
+            console.print("Enter Search Key (Ctrl+C to exit): ");
+            String searchKey = console.getLine();
+            ArrayList<String> searchResult = ii.searchDocuments(searchKey);
+            console.printOrderedArray(searchResult);
         }
     }
 }

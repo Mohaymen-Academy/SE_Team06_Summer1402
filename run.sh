@@ -1,3 +1,3 @@
 #!/bin/bash
-javac ConsoleInterface.java FileReader.java InvertedIndex.java StringUtils.java Main.java
+javac UserInterface.java FileReader.java InvertedIndex.java StringUtils.java Main.java Tokenizer.java Normalizer.java
 java Main
