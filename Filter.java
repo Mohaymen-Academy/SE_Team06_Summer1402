@@ -13,10 +13,6 @@ class AndFilter implements Filter {
         _data = data;
     }
 
-    public ArrayList<String> getData() {
-        return _data;
-    }
-
     public ArrayList<String> filter(ArrayList<String> data) {
         ArrayList<String> result = new ArrayList<String>();
         for (String s : data)
@@ -29,5 +25,4 @@ class AndFilter implements Filter {
         _data = filter(data);
     }
 
-    
 }

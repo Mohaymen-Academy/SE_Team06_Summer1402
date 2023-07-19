@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static final String WHITESPACE_REGEX = "\\s+";
@@ -13,10 +14,21 @@ public class Main {
         for (String filename : filenames)
             ii.addDocument(fileReader.getFullText(filename), StringUtils.removeAfter(filename, '.'));
 
+        Tokenizer wsTokenizer = new RegexTokenizer(WHITESPACE_REGEX);
         while (true) {
-            console.print("Enter Search Key (Ctrl+C to exit): ");
-            String searchKey = console.getLine();
-            ArrayList<String> searchResult = ii.searchDocuments(searchKey);
+            console.print("Enter Search Keys (Ctrl+C to exit, +OR, -NOT): ");
+            Options options = new Options(wsTokenizer.tokenize(console.getLine()));
+            ArrayList<String> andOptions, or, not;
+            or = options.pop('+');
+            not = options.pop('-');
+            
+            andOptions = options.getRemained();
+            Filter andFilter = new AndFilter(ii.searchDocuments(andOptions.get(0)));
+            for (String andOption : andOptions)
+                andFilter.addData(ii.searchDocuments(andOption));
+
+            ArrayList<String> searchResult = ii.searchDocuments(andOptions.get(0));
+            searchResult = andFilter.filter(searchResult);
             if (searchResult.size() != 0)
                 console.printOrderedArray(searchResult);
             else
