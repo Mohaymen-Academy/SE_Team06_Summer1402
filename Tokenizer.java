@@ -14,6 +14,15 @@ class RegexTokenizer implements Tokenizer {
         _regex = regex;
     }
 
+    public void addRegex(String newRegex) {
+        _regex += "|" + newRegex;
+    }
+
+    public void addRegexList(String[] regexList) {
+        for (String newRegex : regexList)
+            addRegex(newRegex);
+    }
+
     public ArrayList<String> tokenize(String str) {
         if (str.isBlank())
             return EMPTY;
