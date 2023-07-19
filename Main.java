@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Main {
     public static final String WHITESPACE_REGEX = "\\s+";
@@ -20,15 +19,15 @@ public class Main {
             Options options = new Options(wsTokenizer.tokenize(console.getLine()));
             ArrayList<String> andOptions, orOptions, notOptions;
 
-            // orOptions = options.pop('+');
-            // Filter orFilter = new OrFilter();
-            // for (String orOption : orOptions)
-            //     orFilter.addData(ii.searchDocuments(orOption));
+            orOptions = options.pop('+');
+            Filter orFilter = new OrFilter();
+            for (String orOption : orOptions)
+                orFilter.addData(ii.searchDocuments(orOption));
 
-            // notOptions = options.pop('-');
-            // Filter notFilter = new NotFilter();
-            // for (String notOption : notOptions)
-            //     notFilter.addData(ii.searchDocuments(notOption));
+            notOptions = options.pop('-');
+            Filter notFilter = new NotFilter();
+            for (String notOption : notOptions)
+                notFilter.addData(ii.searchDocuments(notOption));
 
             andOptions = options.getRemained();
             Filter andFilter = new AndFilter(ii.searchDocuments(andOptions.get(0)));
@@ -37,10 +36,9 @@ public class Main {
 
             ArrayList<String> searchResult = ii.searchDocuments(andOptions.get(0));
 
-            // for (Filter filter : new Filter[] {andFilter, orFilter, notFilter})
-            //     searchResult = filter.filter(searchResult);
+            for (Filter filter : new Filter[] { orFilter, andFilter, notFilter })
+                searchResult = filter.filter(searchResult);
 
-            searchResult = andFilter.filter(searchResult);
             if (searchResult.size() != 0)
                 console.printOrderedArray(searchResult);
             else
