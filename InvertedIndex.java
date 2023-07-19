@@ -18,7 +18,8 @@ public class InvertedIndex {
         ArrayList<String> tokens = _tokenizer.tokenize(normalizedDoc);
         for (String token : tokens)
             if (tokenMap.get(token) != null) {
-                tokenMap.get(token).add(reference);
+                if (!tokenMap.get(token).contains(reference))
+                    tokenMap.get(token).add(reference);
             } else {
                 ArrayList<String> newTokenList = new ArrayList<String>();
                 newTokenList.add(reference);
