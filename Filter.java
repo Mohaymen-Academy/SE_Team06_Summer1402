@@ -1,74 +1,32 @@
 import java.util.ArrayList;
 
-public interface Filter {
-    public ArrayList<String> filter(ArrayList<String> data);
-
-    public void addData(ArrayList<String> newData);
-}
-
-class AndFilter implements Filter {
-    private ArrayList<String> _data;
-
-    public AndFilter(ArrayList<String> data) {
-        _data = data;
-    }
-
-    public ArrayList<String> filter(ArrayList<String> data) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (String s : data)
-            if (_data.contains(s))
-                result.add(s);
-        return result;
-    }
+public abstract class Filter {
+    protected ArrayList<ArrayList<String>> allData = new ArrayList<ArrayList<String>>();
 
     public void addData(ArrayList<String> data) {
-        _data = filter(data);
+        allData.add(data);
     }
 
+    public void clearData() {
+        allData.clear();
+    }
+
+    public abstract ArrayList<String> filter(ArrayList<String> data);
 }
 
-class OrFilter implements Filter {
-    private ArrayList<String> _data;
-    private boolean hasData = false;
+class NotFilter extends Filter {
 
-    public OrFilter() {
-        _data = new ArrayList<String>();
-    }
+    public ArrayList<String> filter(ArrayList<String> toFilter) {
+        Merger<String> orMerger = new OrMerger<String>();
+        for (ArrayList<String> data : allData)
+            orMerger.add(data);
 
-    public ArrayList<String> filter(ArrayList<String> data) {
+        ArrayList<String> filterData = orMerger.merge();
+
         ArrayList<String> result = new ArrayList<String>();
-        for (String s : data)
-            if (!hasData || _data.contains(s))
+        for (String s : toFilter)
+            if (!filterData.contains(s))
                 result.add(s);
         return result;
-    }
-
-    public void addData(ArrayList<String> data) {
-        hasData = true;
-        for (String newData : data)
-            if (!_data.contains(newData))
-                _data.add(newData);
-    }
-}
-
-class NotFilter implements Filter {
-    private ArrayList<String> _data;
-
-    public NotFilter() {
-        _data = new ArrayList<String>();
-    }
-
-    public ArrayList<String> filter(ArrayList<String> data) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (String s : data)
-            if (!_data.contains(s))
-                result.add(s);
-        return result;
-    }
-
-    public void addData(ArrayList<String> data) {
-        for (String newData : data)
-            if (!_data.contains(newData))
-                _data.add(newData);
     }
 }
