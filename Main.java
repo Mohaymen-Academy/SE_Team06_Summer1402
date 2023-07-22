@@ -10,7 +10,7 @@ public class Main {
     private static Filter notFilter = new NotFilter();
 
     private static void initInvertedIndex(String sourcePath) {
-        ii = new InvertedIndex(new RegexTokenizer(WHITESPACE_REGEX + "|:|-"), new TestNormalizer());
+        ii = new InvertedIndex(new RegexTokenizer(WHITESPACE_REGEX + "|:|-"), new DefaultNormalizer());
         FileReader fileReader = new FileReader(sourcePath);
         ArrayList<String> filenames = fileReader.getFilenames();
         for (String filename : filenames)
@@ -25,8 +25,8 @@ public class Main {
     }
 
     private static void initQueries() {
-            andQuery = new AndQuery(ii);
-            orQuery = new OrQuery(ii);
+        andQuery = new AndQuery(ii);
+        orQuery = new OrQuery(ii);
     }
 
     private static void createQueries(ArrayList<String> andParams, ArrayList<String> orParams) {

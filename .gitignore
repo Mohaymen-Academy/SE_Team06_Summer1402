@@ -34,6 +34,4 @@ documents
 # test files
 test.java
 
-# ignore this! testing commit change for PRs
-
 # End of https://www.toptal.com/developers/gitignore/api/java
