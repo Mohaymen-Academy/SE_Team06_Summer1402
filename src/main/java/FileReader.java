@@ -1,3 +1,5 @@
+import lombok.Setter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -19,8 +21,7 @@ public class FileReader {
         File file = new File(sourcePath);
         File[] files = file.listFiles();
         for (File currentFile : files)
-            if (currentFile.isFile())
-                filenames.add(currentFile.getName());
+            if (currentFile.isFile()) filenames.add(currentFile.getName());
         return filenames;
     }
 
@@ -30,8 +31,7 @@ public class FileReader {
             String filePath = getPath(filename);
             File file = new File(filePath);
             Scanner sc = new Scanner(file);
-            while (sc.hasNextLine())
-                fullText += sc.nextLine() + "\n";
+            while (sc.hasNextLine()) fullText += sc.nextLine() + "\n";
             sc.close();
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
