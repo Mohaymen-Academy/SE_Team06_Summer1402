@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Query {
     private InvertedIndex ii;
@@ -10,7 +11,8 @@ public abstract class Query {
     }
 
     public ArrayList<String> getDocuments(String token) {
-        return ii.searchDocuments(token);
+//        return ii.searchDocuments(token);
+        return new ArrayList<String>(Arrays.asList("hasan"));
     }
 
     public void clearParams() {

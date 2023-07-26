@@ -1,3 +1,5 @@
+import Normalizer.Normalizer;
+
 import java.util.ArrayList;
 
 public class Main {
@@ -10,7 +12,7 @@ public class Main {
     private static Filter notFilter = new NotFilter();
 
     private static void initInvertedIndex(String sourcePath) {
-        ii = new InvertedIndex(new RegexTokenizer(WHITESPACE_REGEX + "|:|-"), new DefaultNormalizer());
+//        ii = new InvertedIndex(new RegexTokenizer(WHITESPACE_REGEX + "|:|-"), new DefaultNormalizer());
         FileReader fileReader = new FileReader(sourcePath);
         ArrayList<String> filenames = fileReader.getFilenames();
         for (String filename : filenames)
@@ -42,8 +44,8 @@ public class Main {
     }
 
     private static void createFilter(ArrayList<String> notParams) {
-        for (String notParam : notParams)
-            notFilter.addData(ii.searchDocuments(notParam));
+//        for (String notParam : notParams)
+//            notFilter.addData(ii.searchDocuments(notParam));
     }
 
     private static ArrayList<String> mergeQueries() {
@@ -62,25 +64,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        console.println("Wait for the preprocessing...");
-        initInvertedIndex("./documents");
-
-        Tokenizer wsTokenizer = new RegexTokenizer(WHITESPACE_REGEX);
-        initQueries();
-        while (true) {
-            console.print("Enter Search Keys (Ctrl+C to exit, +OR, -NOT): ");
-            Options options = new Options(wsTokenizer.tokenize(console.getLine()));
-            ArrayList<String> andParams, orParams, notParams;
-            orParams = options.pop('+');
-            notParams = options.pop('-');
-            andParams = options.getRemained();
-            createQueries(andParams, orParams);
-            createFilter(notParams);
-
-            ArrayList<String> searchResult = filterQueries(mergeQueries());
-
-            ShowSearchResult(searchResult);
-            clearSearchData();
-        }
+//        console.println("Wait for the preprocessing...");
+//        initInvertedIndex("./documents");
+//
+//        Tokenizer wsTokenizer = new RegexTokenizer(WHITESPACE_REGEX);
+//        initQueries();
+//        while (true) {
+//            console.print("Enter Search Keys (Ctrl+C to exit, +OR, -NOT): ");
+//            Options options = new Options(wsTokenizer.tokenize(console.getLine()));
+//            ArrayList<String> andParams, orParams, notParams;
+//            orParams = options.pop('+');
+//            notParams = options.pop('-');
+//            andParams = options.getRemained();
+//            createQueries(andParams, orParams);
+//            createFilter(notParams);
+//
+//            ArrayList<String> searchResult = filterQueries(mergeQueries());
+//
+//            ShowSearchResult(searchResult);
+//            clearSearchData();
+//        }
+        System.out.println("working!");
+//        Normalizer normalizer = Normalizer.TestNormalizer.builder()
     }
 }

@@ -1,38 +1,44 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import Normalizer.Normalizer;
+import Tokenizer.Tokenizer;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+import java.util.*;
+
+@RequiredArgsConstructor
+@Setter
 public class InvertedIndex {
-    private static final ArrayList<String> EMPTY_RESULT = new ArrayList<String>();
-    private HashMap<String, ArrayList<String>> tokenMap;
-    private Tokenizer _tokenizer;
-    private Normalizer _normalizer;
+    private static final Set<String> EMPTY_RESULT = new HashSet<>();
+    private final @NonNull Tokenizer tokenizer;
+    private Normalizer normalizer;
+    private Map<String, Set<String>> tokenMap = new HashMap<String, Set<String>>();
 
-    public InvertedIndex(Tokenizer tokenizer, Normalizer normalizer) {
-        tokenMap = new HashMap<String, ArrayList<String>>();
-        _tokenizer = tokenizer;
-        _normalizer = normalizer;
+
+    public String normalize(String data) {
+        if (this.normalizer != null)
+            return this.normalizer.normalize(data);
+        return data;
     }
 
-    public void addDocument(String document, String reference) {
-        String normalizedDoc = _normalizer.normalize(document);
-        ArrayList<String> tokens = _tokenizer.tokenize(normalizedDoc);
+    public void addDocument(String name, String data) {
+        String normalizedDocument = normalize(data);
+        List<String> tokens = this.tokenizer.tokenize(normalizedDocument);
         for (String token : tokens)
-            if (tokenMap.get(token) != null) {
-                if (!tokenMap.get(token).contains(reference))
-                    tokenMap.get(token).add(reference);
+            if (this.tokenMap.containsKey(token)) {
+                tokenMap.get(token).add(name);
             } else {
-                ArrayList<String> newTokenList = new ArrayList<String>();
-                newTokenList.add(reference);
-                tokenMap.put(token, newTokenList);
+                Set<String> newTokenSet = new HashSet<>();
+                newTokenSet.add(name);
+                tokenMap.put(token, newTokenSet);
             }
     }
 
-    public ArrayList<String> searchDocuments(String token) {
-        String normalizedToken = _normalizer.normalize(token);
-        if (tokenMap.get(normalizedToken) == null)
-            return EMPTY_RESULT;
-
-        return tokenMap.get(normalizedToken);
+    public Set<String> searchDocuments(String token) {
+        String normalizedToken = this.normalizer.normalize(token);
+        if (this.tokenMap.containsKey(normalizedToken))
+            return tokenMap.get(normalizedToken);
+        return EMPTY_RESULT;
     }
 
 }
