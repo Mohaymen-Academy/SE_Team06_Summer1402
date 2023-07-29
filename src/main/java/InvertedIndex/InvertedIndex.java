@@ -1,8 +1,8 @@
+package InvertedIndex;
+
 import Normalizer.Normalizer;
 import Tokenizer.Tokenizer;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.*;
 
@@ -12,17 +12,20 @@ public class InvertedIndex {
     private static final Set<String> EMPTY_RESULT = new HashSet<>();
     private final @NonNull Tokenizer tokenizer;
     private Normalizer normalizer;
-    private Map<String, Set<String>> tokenMap = new HashMap<String, Set<String>>();
+    @Setter(AccessLevel.NONE)
+    private Map<String, Set<String>> tokenMap = new HashMap<>();
+    private @Getter HashSet<String> allDocuments = new HashSet<>();
 
 
-    public String normalize(String data) {
+    private String normalize(String data) {
         if (this.normalizer != null)
             return this.normalizer.normalize(data);
         return data;
     }
 
     public void addDocument(String name, String data) {
-        String normalizedDocument = normalize(data);
+        this.allDocuments.add(name);
+        String normalizedDocument = this.normalize(data);
         List<String> tokens = this.tokenizer.tokenize(normalizedDocument);
         for (String token : tokens)
             if (this.tokenMap.containsKey(token)) {
@@ -35,7 +38,7 @@ public class InvertedIndex {
     }
 
     public Set<String> searchDocuments(String token) {
-        String normalizedToken = this.normalizer.normalize(token);
+        String normalizedToken = this.normalize(token);
         if (this.tokenMap.containsKey(normalizedToken))
             return tokenMap.get(normalizedToken);
         return EMPTY_RESULT;
