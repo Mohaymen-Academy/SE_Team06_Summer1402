@@ -1,62 +1,51 @@
 import InvertedIndex.InvertedIndex;
-import Query.AndQuery;
-import Query.NotQuery;
-import Query.OrQuery;
 import Query.Query;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class QueryTest {
     InvertedIndex ii;
-    Query query;
 
     @BeforeEach
     public void setup() {
         this.ii = Mockito.mock(InvertedIndex.class);
-        Mockito.when(ii.searchDocuments("first")).thenReturn(Set.of("book1", "book2", "book3"));
-        Mockito.when(ii.searchDocuments("second")).thenReturn(Set.of("book1", "book2"));
-        Mockito.when(ii.searchDocuments("third")).thenReturn(Set.of("book1"));
+        Mockito.when(ii.searchDocuments("first")).thenReturn(new HashSet<>(Set.of("book1", "book2", "book3")));
+        Mockito.when(ii.searchDocuments("second")).thenReturn(new HashSet<>(Set.of("book1", "book2")));
+        Mockito.when(ii.searchDocuments("third")).thenReturn(new HashSet<>(Set.of("book1")));
         Mockito.when(ii.getAllDocuments()).thenReturn(new HashSet<>(Set.of("book1", "book2", "book3")));
     }
 
     @Test
     public void whenAndQuery() {
-        this.query = new AndQuery(this.ii);
-        this.query.setParams(new HashSet<>(Set.of("first", "second", "third")));
-        Assertions.assertEquals(Set.of("book1"), query.get());
-        this.query.clearParams();
-        this.query.setParams(new HashSet<>(Set.of("first", "second")));
-        Assertions.assertEquals(Set.of("book1", "book2"), query.get());
+        Query query1 = Query.builder().must(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Assertions.assertEquals(Set.of("book1"), query1.run(this.ii));
+
+        Query query2 = Query.builder().must(new ArrayList<>(Arrays.asList("first", "second"))).build();
+        Assertions.assertEquals(Set.of("book1", "book2"), query2.run(this.ii));
     }
 
     @Test
     public void whenOrQuery() {
-        this.query = new OrQuery(this.ii);
-        this.query.setParams(new HashSet<>(Set.of("first", "second", "third")));
-        Assertions.assertEquals(Set.of("book1", "book2", "book3"), query.get());
-        this.query.clearParams();
-        this.query.setParams(new HashSet<>(Set.of("first")));
-        Assertions.assertEquals(Set.of("book1", "book2", "book3"), query.get());
+        Query query1 = Query.builder().should(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Assertions.assertEquals(Set.of("book1", "book2", "book3"), query1.run(this.ii));
+
+        Query query2 = Query.builder().should(new ArrayList<>(Arrays.asList("first", "third"))).build();
+        Assertions.assertEquals(Set.of("book1", "book2", "book3"), query2.run(this.ii));
     }
 
     @Test
     public void whenNotQuery() {
-        this.query = new NotQuery(this.ii);
+        Query query1 = Query.builder().mustNot(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Assertions.assertEquals(Set.of(), query1.run(this.ii));
 
-        this.query.setParams(new HashSet<>(Set.of("first", "second", "third")));
-        Assertions.assertEquals(Set.of(), query.get());
-        this.query.clearParams();
-
-        this.query.setParams(new HashSet<>(Set.of("second", "third")));
-        Assertions.assertEquals(Set.of("book3"), query.get());
-        this.query.clearParams();
-
-        this.query.setParams(new HashSet<>(Set.of()));
-        Assertions.assertEquals(Set.of("book1", "book2", "book3"), query.get());
+        Query query2 = Query.builder().mustNot(new ArrayList<>(Arrays.asList("second", "third"))).build();
+        Assertions.assertEquals(Set.of("book3"), query2.run(this.ii));
     }
 }

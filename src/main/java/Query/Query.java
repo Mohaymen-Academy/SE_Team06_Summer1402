@@ -1,26 +1,41 @@
 package Query;
 
 import InvertedIndex.InvertedIndex;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
-@RequiredArgsConstructor
-@Setter
-public abstract class Query {
-    protected static final HashSet<String> EMPTY_RESULT = new HashSet<>();
-    protected final InvertedIndex ii;
-    protected HashSet<String> params = new HashSet<>();
+@Builder
+public class Query {
+    private static final HashSet<String> EMPTY_RESULT = new HashSet<>();
+    private ArrayList<String> must;
+    private ArrayList<String> should;
+    private ArrayList<String> mustNot;
 
-    public void addParam(String param) {
-        this.params.add(param);
+    private HashSet<String> runMust(InvertedIndex ii) {
+        HashSet<String> finalSet = new HashSet<>(ii.getAllDocuments());
+        this.must.stream().forEach(param -> finalSet.retainAll(ii.searchDocuments(param)));
+        return finalSet;
     }
 
-    public void clearParams() {
-        this.params.clear();
+    private HashSet<String> runShould(InvertedIndex ii) {
+        HashSet<String> finalSet = new HashSet<>();
+        this.should.stream().forEach(param -> finalSet.addAll(ii.searchDocuments(param)));
+        return finalSet;
     }
 
-    public abstract HashSet<String> get();
+    private HashSet<String> runMustNot(InvertedIndex ii) {
+        HashSet<String> finalSet = new HashSet<>(ii.getAllDocuments());
+        this.mustNot.stream().forEach(param -> finalSet.removeAll(ii.searchDocuments(param)));
+        return finalSet;
+    }
+
+    public HashSet<String> run(InvertedIndex ii) {
+        HashSet<String> finalResult = new HashSet<>(ii.getAllDocuments());
+        if (this.must != null) finalResult.retainAll(this.runMust(ii));
+        if (this.should != null) finalResult.retainAll(this.runShould(ii));
+        if (this.mustNot != null) finalResult.retainAll(this.runMustNot(ii));
+        return finalResult;
+    }
 }

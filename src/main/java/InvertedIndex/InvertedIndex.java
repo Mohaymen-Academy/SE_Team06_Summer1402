@@ -9,11 +9,11 @@ import java.util.*;
 @RequiredArgsConstructor
 @Setter
 public class InvertedIndex {
-    private static final Set<String> EMPTY_RESULT = new HashSet<>();
+    private static final HashSet<String> EMPTY_RESULT = new HashSet<>();
     private final @NonNull Tokenizer tokenizer;
     private Normalizer normalizer;
     @Setter(AccessLevel.NONE)
-    private Map<String, Set<String>> tokenMap = new HashMap<>();
+    private Map<String, HashSet<String>> tokenMap = new HashMap<>();
     private @Getter HashSet<String> allDocuments = new HashSet<>();
 
 
@@ -31,13 +31,13 @@ public class InvertedIndex {
             if (this.tokenMap.containsKey(token)) {
                 tokenMap.get(token).add(name);
             } else {
-                Set<String> newTokenSet = new HashSet<>();
+                HashSet<String> newTokenSet = new HashSet<>();
                 newTokenSet.add(name);
                 tokenMap.put(token, newTokenSet);
             }
     }
 
-    public Set<String> searchDocuments(String token) {
+    public HashSet<String> searchDocuments(String token) {
         String normalizedToken = this.normalize(token);
         if (this.tokenMap.containsKey(normalizedToken))
             return tokenMap.get(normalizedToken);
