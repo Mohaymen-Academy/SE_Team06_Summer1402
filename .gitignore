@@ -23,6 +23,8 @@ documents
 # Maven End
 
 ### Intellij ###
+# resources
+#src/main/resources
 
 # User-specific stuff
 .idea/**/workspace.xml
