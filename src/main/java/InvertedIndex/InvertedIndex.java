@@ -4,7 +4,10 @@ import Normalizer.Normalizer;
 import Tokenizer.Tokenizer;
 import lombok.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Setter
@@ -15,7 +18,6 @@ public class InvertedIndex {
     @Setter(AccessLevel.NONE)
     private Map<String, HashSet<String>> tokenMap = new HashMap<>();
     private @Getter HashSet<String> allDocuments = new HashSet<>();
-
 
     private String normalize(String data) {
         if (this.normalizer != null)

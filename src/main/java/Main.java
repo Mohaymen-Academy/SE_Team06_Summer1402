@@ -1,18 +1,55 @@
 import InvertedIndex.InvertedIndex;
+import Normalizer.Normalizer;
+import Normalizer.WholeTextNormalizer;
 import Query.Query;
-import Tokenizer.Tokenizer;
 import Tokenizer.RegexTokenizer;
+import Tokenizer.Tokenizer;
+import UserInterface.Console;
+import UserInterface.UserInterface;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        Tokenizer tokenizer = new RegexTokenizer("\\s+");
-        InvertedIndex ii = new InvertedIndex(tokenizer);
-        ii.addDocument("book1", "this is data");
-        ii.addDocument("book2", "this was Data");
+    private InvertedIndex ii;
+    private final FileReader fileReader = new FileReader("documents/");
+    private final UserInterface console = new Console();
+    private static final List<String> REMOVE_MARKS = List.of(",", ".", "!", "-", "\"", "_", "?");
 
-        Query query;
+    public static String removeTxtExtension(String filename) {
+        String result = filename;
+        if (filename.endsWith(".txt")) result = filename.substring(0, filename.length() - 4);
+        return result;
+    }
+
+    public void initInvertedIndex() {
+        Tokenizer whitespaceTokenizer = new RegexTokenizer("\\s+");
+        Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Main.REMOVE_MARKS).toLowerCase(true).build();
+        this.ii = new InvertedIndex(whitespaceTokenizer);
+        this.ii.setNormalizer(normalizer);
+    }
+
+    public void setInvertedIndexData() {
+        this.fileReader.getFilenames().forEach(filename -> this.ii.addDocument(Main.removeTxtExtension(filename), fileReader.getFullText(filename)));
+    }
+
+    public void listenQueries(String instruction) {
+        ArgumentParser ap = new ArgumentParser();
+        while (true) {
+            this.console.print(instruction + ": ");
+            String QueryArguments = this.console.getLine();
+            ap.setData(QueryArguments);
+            Query query = Query.builder().should(ap.parse("+")).mustNot(ap.parse("-")).must(ap.parse()).build();
+            if (query.run(this.ii).size() == 0)
+                console.println("<-No Result->");
+            else
+                console.printUnOrderedList(query.run(this.ii));
+        }
+    }
+
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.initInvertedIndex();
+        main.setInvertedIndexData();
+        main.listenQueries("Query (and +or -not)");
     }
 }

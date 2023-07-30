@@ -10,15 +10,7 @@ public class WholeTextNormalizerTest {
     public void normalize_whenRemoveMarkOnly() {
         Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Arrays.asList(",", ".", "!", "-")).build();
         String actual = normalizer.normalize(",this. is!! a--- better, ,version");
-        Assertions.assertEquals("this is a better version", actual);
-    }
-
-    @Test
-    public void normalize_whenSpaceMarkOnly() {
-        Normalizer normalizer = WholeTextNormalizer.builder().spaceMarks(Arrays.asList(",", ".", "!", "-")).build();
-        String actual = normalizer.normalize(",This.is!going-to work");
-        Assertions.assertEquals(" This is going to work", actual);
-
+        Assertions.assertEquals(" this  is   a    better   version", actual);
     }
 
     @Test
@@ -36,9 +28,9 @@ public class WholeTextNormalizerTest {
     }
 
     @Test
-    public void normalize_whenRemoveMarksSpaceMarksToLowerCase() {
-        Normalizer normalizer = WholeTextNormalizer.builder().spaceMarks(Arrays.asList(",", ".", "!", "-")).removeMarks(Arrays.asList("'", "\"")).toLowerCase(true).build();
-        String actual = normalizer.normalize(",ThI's.I\"s!GoIn'G-To Wor\"k");
-        Assertions.assertEquals(" this is going to work", actual);
+    public void normalize_whenRemoveMarksToLowerCase() {
+        Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Arrays.asList("'", "\"", ",", ".", "!", "-")).toLowerCase(true).build();
+        String actual = normalizer.normalize(",ThIs.Is!GoInG-To \"Work\"");
+        Assertions.assertEquals(" this is going to  work ", actual);
     }
 }

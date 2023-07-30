@@ -1,42 +1,39 @@
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
-@Setter
+@RequiredArgsConstructor
 public class FileReader {
-    private String sourcePath;
-
-    public FileReader(String _sourcePath) {
-        sourcePath = _sourcePath;
-    }
+    private final String sourcePath;
 
     private String getPath(String filename) {
-        return (sourcePath + "/" + filename);
+        String path;
+        if (sourcePath.endsWith("/"))
+            path = sourcePath + filename;
+        else
+            path = sourcePath + "/" + filename;
+        return path;
     }
 
-    public ArrayList<String> getFilenames() {
-        ArrayList<String> filenames = new ArrayList<String>();
+    public List<String> getFilenames() {
+        ArrayList<String> filenames = new ArrayList<>();
         File file = new File(sourcePath);
-        File[] files = file.listFiles();
-        for (File currentFile : files)
-            if (currentFile.isFile()) filenames.add(currentFile.getName());
-        return filenames;
+        return Arrays.stream(Objects.requireNonNull(file.listFiles())).map(File::getName).toList();
     }
 
     public String getFullText(String filename) {
-        String fullText = "";
+        StringBuilder fullText = new StringBuilder();
         try {
             String filePath = getPath(filename);
             File file = new File(filePath);
             Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) fullText += sc.nextLine() + "\n";
+            while (sc.hasNextLine()) fullText.append(sc.nextLine()).append("\n");
             sc.close();
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
         }
-        return fullText;
+        return fullText.toString();
     }
 }

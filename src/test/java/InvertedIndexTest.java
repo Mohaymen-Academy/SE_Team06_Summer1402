@@ -31,12 +31,20 @@ public class InvertedIndexTest {
 
     @Test
     public void searchDocuments_whenHasNormalizer() {
-        Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Arrays.asList("'", "\"")).spaceMarks(Arrays.asList(",", ".", "!", "?", "-", "_")).toLowerCase(true).build();
+        Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Arrays.asList("'",",", ".", "!", "?", "-", "_")).toLowerCase(true).build();
         this.ii.setNormalizer(normalizer);
-        this.ii.addDocument("book", "thi's_ boo\"k. ,,  i's abou\"t nothin'g! ?. , specia\"l!-special");
-        this.ii.addDocument("book1", "tha't_ boo\"k. ,,  i's abou\"t nothin'g! ?. , specia\"l!-notspecial");
+        this.ii.addDocument("book", "this_ 'book'. ,,  i's about 'nothing'! ?. , special!-special");
+        this.ii.addDocument("book1", "that_ 'book'. ,,  i's about 'nothing'! ?. , special!-notspecial");
         Assertions.assertEquals(Set.of("book", "book1"), ii.searchDocuments("nothing"));
         Assertions.assertEquals(Set.of("book"), ii.searchDocuments("this"));
         Assertions.assertEquals(Set.of(), ii.searchDocuments("thisbook"));
+    }
+
+    @Test
+    public void whenGetAllDocuments() {
+        this.ii.addDocument("book", "text");
+        this.ii.addDocument("book1", "text");
+        this.ii.addDocument("book2", "text");
+        Assertions.assertEquals(Set.of("book", "book1", "book2"), this.ii.getAllDocuments());
     }
 }

@@ -15,19 +15,21 @@ public class Query {
 
     private HashSet<String> runMust(InvertedIndex ii) {
         HashSet<String> finalSet = new HashSet<>(ii.getAllDocuments());
-        this.must.stream().forEach(param -> finalSet.retainAll(ii.searchDocuments(param)));
+        this.must.forEach(param -> finalSet.retainAll(ii.searchDocuments(param)));
         return finalSet;
     }
 
     private HashSet<String> runShould(InvertedIndex ii) {
+        if (this.should.size() == 0)
+            return new HashSet<>(ii.getAllDocuments());
         HashSet<String> finalSet = new HashSet<>();
-        this.should.stream().forEach(param -> finalSet.addAll(ii.searchDocuments(param)));
+        this.should.forEach(param -> finalSet.addAll(ii.searchDocuments(param)));
         return finalSet;
     }
 
     private HashSet<String> runMustNot(InvertedIndex ii) {
         HashSet<String> finalSet = new HashSet<>(ii.getAllDocuments());
-        this.mustNot.stream().forEach(param -> finalSet.removeAll(ii.searchDocuments(param)));
+        this.mustNot.forEach(param -> finalSet.removeAll(ii.searchDocuments(param)));
         return finalSet;
     }
 

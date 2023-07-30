@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class QueryTest {
     InvertedIndex ii;
+    static final ArrayList<String> EMPTY = new ArrayList<>();
 
     @BeforeEach
     public void setup() {
@@ -24,7 +25,7 @@ public class QueryTest {
 
     @Test
     public void whenAndQuery() {
-        Query query1 = Query.builder().must(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Query query1 = Query.builder().must(new ArrayList<>(Arrays.asList("first", "second", "third"))).should(QueryTest.EMPTY).mustNot(QueryTest.EMPTY).build();
         Assertions.assertEquals(Set.of("book1"), query1.run(this.ii));
 
         Query query2 = Query.builder().must(new ArrayList<>(Arrays.asList("first", "second"))).build();
@@ -33,7 +34,7 @@ public class QueryTest {
 
     @Test
     public void whenOrQuery() {
-        Query query1 = Query.builder().should(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Query query1 = Query.builder().should(new ArrayList<>(Arrays.asList("first", "second", "third"))).mustNot(QueryTest.EMPTY).must(QueryTest.EMPTY).build();
         Assertions.assertEquals(Set.of("book1", "book2", "book3"), query1.run(this.ii));
 
         Query query2 = Query.builder().should(new ArrayList<>(Arrays.asList("first", "third"))).build();
@@ -42,7 +43,7 @@ public class QueryTest {
 
     @Test
     public void whenNotQuery() {
-        Query query1 = Query.builder().mustNot(new ArrayList<>(Arrays.asList("first", "second", "third"))).build();
+        Query query1 = Query.builder().mustNot(new ArrayList<>(Arrays.asList("first", "second", "third"))).should(QueryTest.EMPTY).must(QueryTest.EMPTY).build();
         Assertions.assertEquals(Set.of(), query1.run(this.ii));
 
         Query query2 = Query.builder().mustNot(new ArrayList<>(Arrays.asList("second", "third"))).build();
