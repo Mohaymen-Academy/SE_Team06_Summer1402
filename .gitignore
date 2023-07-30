@@ -24,7 +24,7 @@ documents
 
 ### Intellij ###
 # resources
-#src/main/resources
+src/main/resources
 
 # User-specific stuff
 .idea/**/workspace.xml
