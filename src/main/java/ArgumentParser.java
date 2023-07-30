@@ -32,4 +32,9 @@ public class ArgumentParser {
         return this.args;
     }
 
+    public void clearData() {
+        if (this.args != null)
+            this.args.clear();
+    }
+
 }

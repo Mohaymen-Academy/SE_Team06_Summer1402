@@ -30,7 +30,7 @@ public class WholeTextNormalizerTest {
     @Test
     public void normalize_whenRemoveMarksToLowerCase() {
         Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Arrays.asList("'", "\"", ",", ".", "!", "-")).toLowerCase(true).build();
-        String actual = normalizer.normalize(",ThIs.Is!GoInG-To \"Work\"");
-        Assertions.assertEquals(" this is going to  work ", actual);
+        String actual = normalizer.normalize(",ThIs.Is!GoInG-To\"Work\"");
+        Assertions.assertEquals(" this is going to work ", actual);
     }
 }
