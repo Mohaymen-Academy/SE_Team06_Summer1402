@@ -2,7 +2,7 @@ import InvertedIndex.InvertedIndex;
 import Normalizer.Normalizer;
 import Normalizer.WholeTextNormalizer;
 import Query.Query;
-import Tokenizer.RegexTokenizer;
+import Tokenizer.EdgeNgramTokenizer;
 import Tokenizer.Tokenizer;
 import UserInterface.Console;
 import UserInterface.UserInterface;
@@ -22,9 +22,11 @@ public class Main {
     }
 
     public void initInvertedIndex() {
-        Tokenizer whitespaceTokenizer = new RegexTokenizer("\\s+");
+        int MAX_GRAM = 10;
+        int MIN_GRAM = 2;
+        Tokenizer edgeNgramTokenizer = EdgeNgramTokenizer.builder().minGram(MIN_GRAM).maxGram(MAX_GRAM).build();
         Normalizer normalizer = WholeTextNormalizer.builder().removeMarks(Main.REMOVE_MARKS).toLowerCase(true).build();
-        this.ii = new InvertedIndex(whitespaceTokenizer);
+        this.ii = new InvertedIndex(edgeNgramTokenizer);
         this.ii.setNormalizer(normalizer);
     }
 
